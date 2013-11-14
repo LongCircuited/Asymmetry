@@ -4,6 +4,14 @@ body {
     overflow: hidden;
 }
 
+#title {
+    text-align: center;
+}
+
+#fps {
+    text-align: center;
+}
+
 #canvainer {
     border-style: solid;
     border-width: 1px;
