@@ -9,7 +9,7 @@
         "jquery-browserify": "1.8.1"
     },
     "scripts": {
-        "start": "browserify client/main.js -o public/bundle.js && node index.js"
+        "start": "browserify -d client/main.js -o public/bundle.js && node index.js"
     },
     "license": "MIT"
 }
