@@ -9,10 +9,8 @@ function World(opts) {
 
     this.bounds = opts.bounds || new AABB(0, 0, 100, 100);
 
-    this.terminalVel = 20;
-
-    this.solids = []; // Solid objects for sand to bump into
-    this.sands = []; // Vectors storing a position of sand
+    this.solids = []; // Solid objects
+    this.goal; // The goal
 }
 
 World.prototype.pushSolid = function(s) {
@@ -40,4 +38,16 @@ World.prototype.update = function(dt) {
             window.player.move(intersect);
         }
     };
+
+}
+
+World.prototype.complete = function() {
+    // Check if player is at goal
+    var inter = this.goal.aabb.intersects(window.player.aabb);
+
+    if(inter) {
+        return true;
+    } else {
+        return false;
+    }
 }

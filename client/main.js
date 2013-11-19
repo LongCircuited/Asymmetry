@@ -17,27 +17,27 @@ function main() {
 
     // Bind events, yeah it's pretty
     kb.on('right', function() {
-        ASYM.player.setXVel(PLAYER_SPEED);
+        ASYM.socket.emit('right', PLAYER_SPEED);
     }, function() {
-        ASYM.player.setXVel(0);
+        ASYM.socket.emit('right', 0);
     });
     
     kb.on('left', function() {
-        ASYM.player.setXVel(-PLAYER_SPEED);
+        ASYM.socket.emit('left', PLAYER_SPEED);
     }, function() {
-        ASYM.player.setXVel(0);
+        ASYM.socket.emit('left', 0);
     });
     
     kb.on('down', function() {
-        ASYM.player.setYVel(PLAYER_SPEED);
+        ASYM.socket.emit('down', PLAYER_SPEED);
     }, function() {
-        ASYM.player.setYVel(0);
+        ASYM.socket.emit('down', 0);
     });
 
     kb.on('up', function() {
-        ASYM.player.setYVel(-PLAYER_SPEED);
+        ASYM.socket.emit('up', PLAYER_SPEED);
     }, function() {
-        ASYM.player.setYVel(0);
+        ASYM.socket.emit('up', 0);
     });
     
     kb.on('q', function() {
@@ -61,11 +61,23 @@ function main() {
         ASYM.client = new Client(ip, number);
     });
 
-    ASYM.socket.on('new player pos', function(pos) {
-        ASYM.player2.pos = new Vector(pos.x, pos.y);
+    ASYM.socket.on('right', function(speed) {
+        ASYM.player.setXVel(speed);
+    });
+    
+    ASYM.socket.on('left', function(speed) {
+        ASYM.player.setXVel(speed);
+    });
+    
+    ASYM.socket.on('up', function(speed) {
+        ASYM.player.setYVel(speed);
+    });
+    
+    ASYM.socket.on('down', function(speed) {
+        ASYM.player.setYVel(speed);
     });
 
-    ASYM.socket.on('new render style', function(fillStyle) {
+    ASYM.socket.on('render style', function(fillStyle) {
         ASYM.renderer.fillStyle = fillStyle;
     });
 

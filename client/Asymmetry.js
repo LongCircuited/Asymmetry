@@ -17,7 +17,6 @@ function Asymmetry() {
     this.world = this.initWorld();
 
     this.player = new Player(100, 100);
-    this.player2 = new Player(100, 100);
     window.player = this.player;
 };
 
@@ -45,14 +44,21 @@ Asymmetry.prototype.initWorld = function() {
     var solid = new Solid(10, 400, 400, 100);
     world.pushSolid(solid);
 
+    var goal = new Solid(10, 10, this.width / 2, this.height / 2);
+    world.goal = goal;
+
     return world;
 }
 
 Asymmetry.prototype.updateWorld = function(dt) {
     this.world.update(dt);
-
-    this.player.update(dt);
+    this.player.update(dt); 
     this.socket.emit('player pos', this.player.pos);
+
+    if(this.world.complete()) {
+        this.world.solids = [new Solid(this.width, this.height, 0, 0)];
+        this.renderer.fillStyle = 'green';
+    }
 }
 
 Asymmetry.prototype.drawWorld = function() {
@@ -67,8 +73,13 @@ Asymmetry.prototype.drawWorld = function() {
         this.renderer.fillRect(s.pos.x, s.pos.y, s.w, s.h);
     };
 
+    // Draw goal
+    var g = this.world.goal;
+
+    this.renderer.fillRect(g.pos.x, g.pos.y, g.w, g.h);
+
     // Draw the player
-    var p = this.player2;
+    var p = this.player;
     this.renderer.fillRect(p.pos.x, p.pos.y, p.w, p.h);
 }
 

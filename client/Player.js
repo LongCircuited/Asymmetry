@@ -18,6 +18,7 @@ function Player(x, y, speed) {
 Player.prototype.update = function(dt) {
     var dVec = new Vector(this.vel.x * dt, this.vel.y * dt);
 
+    dVec.round();
     this.pos.add(dVec);
     this.aabb.translate(dVec);
 }
