@@ -9,6 +9,8 @@ module.exports = Asymmetry;
 
 function Asymmetry() {
     var self = this;
+    this.TILE_SIZE = 40;
+    this.MAZE_BORDER = 2;
 
     this.socket = io.connect('http://localhost:9966');
     this.width  = $('#canvainer').width(),
@@ -16,9 +18,8 @@ function Asymmetry() {
     this.renderer = this.createRenderer();
     this.world = this.initWorld();
 
-    this.TILE_SIZE = 40;
-    this.MAZE_BORDER = 2;
     this.maze = this.generateMaze();
+    this.solidifyMaze();
 
     this.player = new Player(100, 100);
     window.player = this.player;
@@ -44,9 +45,6 @@ Asymmetry.prototype.initWorld = function() {
     var world = new World({
         bounds: worldBounds
     });
-
-    var goal = new Solid(this.TILE_SIZE, this.TILE_SIZE, this.width / 2, this.height / 2);
-    world.goal = goal;
 
     return world;
 }
@@ -74,23 +72,8 @@ Asymmetry.prototype.drawWorld = function() {
         this.renderer.fillRect(s.pos.x, s.pos.y, s.w, s.h);
     };
 
-    // Draw maze
-    var m = this.maze;
-    for (var x = 0; x < m.length; x++) {
-        for (var y = 0; y < m[x].length; y++) {
-            var screenPos = new Vector(x*this.TILE_SIZE, y*this.TILE_SIZE),
-                c = m[x][y];
-
-            if(c.N) this.renderer.fillRect(screenPos.x, screenPos.y, this.TILE_SIZE, this.MAZE_BORDER);
-            if(c.E) this.renderer.fillRect(screenPos.x + this.TILE_SIZE, screenPos.y, this.MAZE_BORDER, this.TILE_SIZE);
-            if(c.S) this.renderer.fillRect(screenPos.x, screenPos.y + this.TILE_SIZE, this.TILE_SIZE, this.MAZE_BORDER);
-            if(c.W) this.renderer.fillRect(screenPos.x, screenPos.y, this.MAZE_BORDER, this.TILE_SIZE);
-        };
-    };
-
     // Draw goal
     var g = this.world.goal;
-
     this.renderer.fillRect(g.pos.x, g.pos.y, g.w, g.h);
 
     // Draw the player
@@ -171,10 +154,6 @@ Asymmetry.prototype.generateMaze = function() {
 
     while(visitedCells < totalCells) {
         var randNeighbor = getRandNeighbor(currentCell);
-        console.log('current');
-        console.dir(currentCell);
-        console.log('rand');
-        console.dir(randNeighbor);
 
         if(randNeighbor !== null) {
             if(randNeighbor.x > currentCell.x) {
@@ -202,7 +181,24 @@ Asymmetry.prototype.generateMaze = function() {
 
     }
 
+    this.world.goal = new Solid(this.TILE_SIZE, this.TILE_SIZE, cells[w - 1][h - 1].x * this.TILE_SIZE, cells[w - 1][h - 1].y * this.TILE_SIZE);
+
     return cells;
+}
+
+Asymmetry.prototype.solidifyMaze = function() {
+    var m = this.maze;
+    for (var x = 0; x < m.length; x++) {
+        for (var y = 0; y < m[x].length; y++) {
+            var screenPos = new Vector(x*this.TILE_SIZE, y*this.TILE_SIZE),
+                c = m[x][y];
+
+            if(c.N) this.world.pushSolid(new Solid(this.TILE_SIZE, this.MAZE_BORDER, screenPos.x, screenPos.y));
+            if(c.E) this.world.pushSolid(new Solid(this.MAZE_BORDER, this.TILE_SIZE, screenPos.x + this.TILE_SIZE, screenPos.y));
+            if(c.S) this.world.pushSolid(new Solid(this.TILE_SIZE, this.MAZE_BORDER, screenPos.x, screenPos.y + this.TILE_SIZE));
+            if(c.W) this.world.pushSolid(new Solid(this.MAZE_BORDER, this.TILE_SIZE, screenPos.x, screenPos.y));
+        };
+    };
 }
 
 function Cell(x, y) {
