@@ -3,12 +3,11 @@ var Vector = require('./Vector'),
 
 module.exports = Player;
 
-function Player(x, y, speed) {
+function Player(x, y) {
     this.w = 20;
     this.h = 20;
 
     this.vel = new Vector(0, 0);
-    this.speed = speed || 50;
     
     this.pos = new Vector(x, y);
 
