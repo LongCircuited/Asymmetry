@@ -10,7 +10,7 @@ module.exports = Asymmetry;
 function Asymmetry() {
     var self = this;
 
-    this.socket = io.connect('http://172.16.0.25:9966');
+    this.socket = io.connect('http://localhost:9966');
     this.width  = $('#canvainer').width(),
     this.height = $('#canvainer').height(),
     this.renderer = this.createRenderer();

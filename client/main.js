@@ -54,7 +54,7 @@ function main() {
     tick();
 
     ASYM.socket.on('client connected', function(number) {
-        var ip = "172.16.0.25";
+        var ip = "localhost";
 
         if(number > 2) alert('too many people connected');
 
