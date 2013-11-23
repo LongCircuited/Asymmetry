@@ -171,20 +171,22 @@ Asymmetry.prototype.generateMaze = function() {
 
     while(visitedCells < totalCells) {
         var randNeighbor = getRandNeighbor(currentCell);
-
-        randNeighbor = getRandNeighbor(currentCell);
+        console.log('current');
+        console.dir(currentCell);
+        console.log('rand');
+        console.dir(randNeighbor);
 
         if(randNeighbor !== null) {
-            if(randNeighbor.x > currentCellCoords.x) {
+            if(randNeighbor.x > currentCell.x) {
                 currentCell.E = false;
                 randNeighbor.W = false;
-            } else if (randNeighbor.x < currentCellCoords.x) {
+            } else if (randNeighbor.x < currentCell.x) {
                 currentCell.W = false;
                 randNeighbor.E = false;
-            } else if (randNeighbor.y < currentCellCoords.y) {
+            } else if (randNeighbor.y < currentCell.y) {
                 currentCell.N = false;
                 randNeighbor.S = false;
-            } else if (randNeighbor.y > currentCellCoords.y) {
+            } else if (randNeighbor.y > currentCell.y) {
                 currentCell.S = false;
                 randNeighbor.N = false;
             } else {
@@ -193,11 +195,11 @@ Asymmetry.prototype.generateMaze = function() {
 
             cellStack.push(currentCell);
             currentCell = randNeighbor;
+            visitedCells++;
         } else {
             currentCell = cellStack.pop()
         }
 
-        visitedCells++;
     }
 
     return cells;
